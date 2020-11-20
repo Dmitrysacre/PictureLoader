@@ -3,21 +3,18 @@
     <Header />
     <div class="main">
       <div class="col1">
-        <div class="page-name">Главная</div>
+        <div class="arrow-back"><RouterLink to="/">←</RouterLink></div>
+        <div class="page-name">История</div>
       </div>
       <div class="col2">
-        <div
-          class="picture"
-          :style="
-            currentPreview ? `background-image: url(${currentPreview})` : null
-          "
-        ></div>
-        <load-button class="load-button" @click="onClick" />
-        <input
-          ref="file"
-          type="file"
-          style="display: none"
-          @change="addPicture"
+        <loaded-item
+          v-for="item in pictures"
+          :key="item.name"
+          class="loaded-item"
+          :src="getUrl(item)"
+          :loading-time="new Date(item.lastModified)"
+          :title="item.name"
+          @trashClick="onTrashClick(item)"
         />
       </div>
     </div>
@@ -27,27 +24,24 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Header } from '@/components/Header'
-import { LoadButton } from '@/components/LoadButton'
+import { LoadedItem } from '@/components/LoadedItem'
 
 export default Vue.extend({
   components: {
     Header,
-    LoadButton,
+    LoadedItem,
   },
-  data() {
-    return {
-      currentPreview: null as string | null,
-    }
+  computed: {
+    pictures() {
+      return this.$store.state.pictures.list as File[]
+    },
   },
   methods: {
-    onClick() {
-      ;(this.$refs.file as HTMLElement).click()
+    getUrl(picture: File) {
+      return URL.createObjectURL(picture)
     },
-    addPicture(e: Event) {
-      const file = (e.target as any).files[0] as File
-      this.$store.commit('pictures/add', file)
-      this.currentPreview = URL.createObjectURL(file)
-      // ;(e.target as any).value = ''
+    onTrashClick(file: File) {
+      this.$store.commit('pictures/remove', file)
     },
   },
 })
@@ -62,29 +56,29 @@ export default Vue.extend({
   background: #fff 0% 0% no-repeat padding-box;
   border: 1px solid #707070;
   opacity: 1;
-  height: 468px;
+  height: 593px;
   display: flex;
 }
 
 .col1 {
+  padding-top: 67px;
+  padding-left: 30px;
+  display: flex;
   width: calc((100% - var(--central-width)) / 2);
 }
 .col2 {
   width: var(--central-width);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 79px;
 }
 .col3 {
   width: calc((100% - var(--central-width)) / 2);
 }
 .page-name {
-  margin-top: 67px;
-  margin-left: 30px;
   font: normal normal normal 22px/25px Roboto, sans-serif;
   letter-spacing: 0;
   color: #707070;
   opacity: 1;
+  margin-left: 14px;
 }
 .picture {
   margin-top: 79px;
@@ -92,11 +86,16 @@ export default Vue.extend({
     0% no-repeat padding-box;
   height: 252px;
   width: 100%;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 .load-button {
   margin: 31px 0;
+}
+.loaded-item {
+  margin-bottom: 30px;
+}
+.arrow-back > a {
+  color: #000;
+  opacity: 0.54;
+  text-decoration: none;
 }
 </style>

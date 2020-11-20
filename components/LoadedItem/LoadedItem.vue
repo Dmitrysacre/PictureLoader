@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <div class="pic" :style="`background: url(${src})`"></div>
+    <div style="display: flex">
+      <div class="pic" :style="`background-image: url(${src})`"></div>
+      <div class="trash-wrapper">
+        <div class="trash" @click="$emit('trashClick')">x</div>
+      </div>
+    </div>
     <div class="metadata">
       <div class="title">{{ title }}</div>
       <div class="loading-time">
@@ -54,5 +59,15 @@ export default Vue.extend({
   letter-spacing: 0;
   color: #707070;
   opacity: 1;
+}
+.trash-wrapper {
+  position: relative;
+  width: 0;
+}
+.trash {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  cursor: pointer;
 }
 </style>
