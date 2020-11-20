@@ -1,25 +1,13 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">picture-loader</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+    <Header />
+    <div class="main">
+      <div class="col1">
+        <div class="page-name">Главная</div>
+      </div>
+      <div class="col2">
+        <div class="picture"></div>
+        <load-button class="load-button" />
       </div>
     </div>
   </div>
@@ -27,39 +15,58 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Header } from '@/components/Header'
+import { LoadButton } from '@/components/LoadButton'
 
-export default Vue.extend({})
+export default Vue.extend({
+  components: {
+    Header,
+    LoadButton,
+  },
+})
 </script>
 
 <style>
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
+  --central-width: 453px;
+}
+.main {
+  margin-top: 40px;
+  background: #fff 0% 0% no-repeat padding-box;
+  border: 1px solid #707070;
+  opacity: 1;
+  height: 468px;
   display: flex;
-  justify-content: center;
+}
+
+.col1 {
+  width: calc((100% - var(--central-width)) / 2);
+}
+.col2 {
+  width: var(--central-width);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
 }
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.col3 {
+  width: calc((100% - var(--central-width)) / 2);
 }
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.page-name {
+  margin-top: 67px;
+  margin-left: 30px;
+  font: normal normal normal 22px/25px Roboto, sans-serif;
+  letter-spacing: 0;
+  color: #707070;
+  opacity: 1;
 }
-
-.links {
-  padding-top: 15px;
+.picture {
+  margin-top: 79px;
+  background: transparent linear-gradient(180deg, #d29ef8 0%, #00ced6 100%) 0%
+    0% no-repeat padding-box;
+  height: 252px;
+  width: 100%;
+}
+.load-button {
+  margin: 31px 0;
 }
 </style>
