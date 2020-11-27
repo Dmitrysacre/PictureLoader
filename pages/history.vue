@@ -9,11 +9,11 @@
       <div class="col2">
         <loaded-item
           v-for="item in pictures"
-          :key="item.name"
+          :key="item.src"
           class="loaded-item"
-          :src="getUrl(item)"
-          :loading-time="new Date(item.lastModified)"
-          :title="item.name"
+          :src="item.src"
+          :loading-time="item.loadingTime"
+          :title="item.title"
           @trashClick="onTrashClick(item)"
         />
       </div>
@@ -25,6 +25,7 @@
 import Vue from 'vue'
 import { Header } from '@/components/Header'
 import { LoadedItem } from '@/components/LoadedItem'
+import { Picture } from '~/store/pictures'
 
 export default Vue.extend({
   components: {
@@ -33,14 +34,14 @@ export default Vue.extend({
   },
   computed: {
     pictures() {
-      return this.$store.state.pictures.list as File[]
+      return this.$store.state.pictures.list as Picture[]
     },
   },
   methods: {
-    getUrl(picture: File) {
+    getUrl(picture: Picture) {
       return URL.createObjectURL(picture)
     },
-    onTrashClick(file: File) {
+    onTrashClick(file: Picture) {
       this.$store.commit('pictures/remove', file)
     },
   },
@@ -58,6 +59,7 @@ export default Vue.extend({
   opacity: 1;
   height: 593px;
   display: flex;
+  overflow: scroll;
 }
 
 .col1 {

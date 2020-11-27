@@ -9,16 +9,12 @@
         <div
           class="picture"
           :style="
-            currentPreview ? `background-image: url(${currentPreview})` : null
+            currentPreview
+              ? `background-image: url(${currentPreview.src})`
+              : null
           "
         ></div>
         <load-button class="load-button" @click="onClick" />
-        <input
-          ref="file"
-          type="file"
-          style="display: none"
-          @change="addPicture"
-        />
       </div>
     </div>
   </div>
@@ -28,25 +24,37 @@
 import Vue from 'vue'
 import { Header } from '@/components/Header'
 import { LoadButton } from '@/components/LoadButton'
+import { Picture } from '~/store/pictures'
 
 export default Vue.extend({
   components: {
     Header,
     LoadButton,
   },
+  async fetch() {
+    const {
+      data: { data },
+    } = await this.$axios.get(
+      'https://api.giphy.com/v1/gifs/random?api_key=xgcnvYuqk4vP1WQQtWPz6F1A0B4WHHdA'
+    )
+    this.currentPreview = {
+      src: data.images.original.url,
+      title: data.title,
+      loadingTime: new Date(),
+    }
+  },
   data() {
     return {
-      currentPreview: null as string | null,
+      currentPreview: null as Picture | null,
     }
   },
   methods: {
     onClick() {
-      ;(this.$refs.file as HTMLElement).click()
+      this.addPicture()
     },
-    addPicture(e: Event) {
-      const file = (e.target as any).files[0] as File
-      this.$store.commit('pictures/add', file)
-      this.currentPreview = URL.createObjectURL(file)
+    addPicture() {
+      this.$store.commit('pictures/add', this.currentPreview)
+      this.$fetch()
       // ;(e.target as any).value = ''
     },
   },
